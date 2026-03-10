@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- NAVBAR -->
+<nav class="navbar">
+    <div class="navbar-content fade-content">
+        <a href="#" class="logo">
+            <div class="logo-icon">📱</div>
+            <span>PhoneVS Ultimate</span>
+        </a>
+
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Поиск смартфонов...">
+        </div>
+
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="toggleFavorites()">
+                ❤️ <span data-i18n="favorites">Избранное</span> (<span id="favCount">0</span>)
+            </button>
+            <button class="nav-btn icon-only" onclick="showWallpaperModal()" title="Обои">🖼️</button>
+            <button class="nav-btn icon-only" onclick="toggleTheme()" id="themeBtn" title="Тема">🌙</button>
+            <button class="nav-btn icon-only" onclick="toggleLang()" id="langBtn">RU</button>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN CONTAINER -->
+<div class="main-container fade-content">
+    <!-- HERO -->
+    <section class="hero">
+        <h1 data-i18n="heroTitle">📱 Полное сравнение смартфонов</h1>
+        <p data-i18n="heroDesc">35+ характеристик, 30+ смартфонов, Trade-In калькулятор, тепловая карта, сравнение размеров и поколений</p>
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="statPhones">0</div>
+                <div class="stat-label" data-i18n="phones">Смартфонов</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="statSpecs">0</div>
+                <div class="stat-label" data-i18n="specs">Характеристик</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="statBrands">0</div>
+                <div class="stat-label" data-i18n="brands">Брендов</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN TABS -->
+    <div class="main-tabs">
+        <button class="main-tab active" onclick="showMainPanel('compare')">
+            <span class="icon">⚔️</span>
+            <span data-i18n="tabCompare">Сравнение</span>
+        </button>
+        <button class="main-tab" onclick="showMainPanel('tradein')">
+            <span class="icon">💱</span>
+            <span data-i18n="tabTradein">Trade-In</span>
+        </button>
+        <button class="main-tab" onclick="showMainPanel('heatmap')">
+            <span class="icon">🌡️</span>
+            <span data-i18n="tabHeatmap">Тепловая карта</span>
+        </button>
+        <button class="main-tab" onclick="showMainPanel('sizes')">
+            <span class="icon">📐</span>
+            <span data-i18n="tabSizes">Размеры</span>
+        </button>
+        <button class="main-tab" onclick="showMainPanel('generations')">
+            <span class="icon">📈</span>
+            <span data-i18n="tabGenerations">Поколения</span>
+        </button>
+    </div>
+
+    <!-- ==================== PANEL: COMPARE ==================== -->
+    <div class="panel active" id="panel-compare">
+        <!-- Quick Compare -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <span class="icon">⚡</span>
+                        <span data-i18n="quickCompare">Популярные сравнения</span>
+                    </h2>
+                </div>
+            </div>
+            <div class="quick-compare-grid" id="quickCompareGrid"></div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-row">
+            <div class="filter-group" id="brandFilters"></div>
+        </div>
+        <div class="filters-row">
+            <div class="filter-group" id="categoryFilters"></div>
+        </div>
+
+        <!-- Selectors -->
+        <div class="section">
+            <div class="selector-grid">
+                <!-- Phone 1 -->
+                <div class="selector-card">
+                    <div class="selector-header">
+                        <span class="selector-label" data-i18n="phone1">Смартфон 1</span>
+                        <div class="selector-actions">
+                            <button class="selector-action" onclick="randomPhone(1)" title="Случайный">🎲</button>
+                            <button class="selector-action" onclick="toggleFavPhone(1)" id="favBtn1" title="В избранное">🤍</button>
+                            <button class="selector-action" onclick="showPhoneModal(1)" title="Инфо">ℹ️</button>
+                        </div>
+                    </div>
+                    <select class="phone-select" id="phone1" onchange="updatePreview(1)"></select>
+                    <div class="phone-preview" id="preview1"></div>
+                </div>
+
+                <!-- VS -->
+                <div class="vs-section">
+                    <div class="vs-circle">VS</div>
+                    <button class="swap-btn" onclick="swapPhones()" title="Поменять">⇄</button>
+                </div>
+
+                <!-- Phone 2 -->
+                <div class="selector-card">
+                    <div class="selector-header">
+                        <span class="selector-label" data-i18n="phone2">Смартфон 2</span>
+                        <div class="selector-actions">
+                            <button class="selector-action" onclick="randomPhone(2)" title="Случайный">🎲</button>
+                            <button class="selector-action" onclick="toggleFavPhone(2)" id="favBtn2" title="В избранное">🤍</button>
+                            <button class="selector-action" onclick="showPhoneModal(2)" title="Инфо">ℹ️</button>
+                        </div>
+                    </div>
+                    <select class="phone-select" id="phone2" onchange="updatePreview(2)"></select>
+                    <div class="phone-preview" id="preview2"></div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="buttons-row">
+                <button class="btn btn-primary" onclick="compare()">
+                    ⚔️ <span data-i18n="btnCompare">Сравнить</span>
+                </button>
+                <button class="btn btn-secondary" onclick="randomCompare()">
+                    🎲 <span data-i18n="btnRandom">Случайное</span>
+                </button>
+                <button class="btn btn-secondary" onclick="clearComparison()">
+                    🗑️ <span data-i18n="btnClear">Очистить</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- No Selection -->
+        <div class="no-selection" id="noSelection">
+            <div class="icon">📱</div>
+            <h3 data-i18n="selectPhones">Выберите смартфоны для сравнения</h3>
+            <p data-i18n="selectDesc">Используйте выпадающие списки или популярные сравнения</p>
+        </div>
+
+        <!-- Comparison Results -->
+        <div class="comparison-results" id="comparisonResults"></div>
+
+        <!-- History -->
+        <div class="section" id="historySection" style="display:none;">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="icon">📜</span>
+                    <span data-i18n="history">История сравнений</span>
+                </h2>
+                <button class="btn btn-secondary" onclick="clearHistory()">🗑️ Очистить</button>
+            </div>
+            <div class="history-list" id="historyList"></div>
+        </div>
+    </div>
+
+    <!-- ==================== PANEL: TRADE-IN ==================== -->
+    <div class="panel" id="panel-tradein">
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <span class="icon">💱</span>
+                        <span data-i18n="tradeinTitle">Калькулятор Trade-In</span>
+                    </h2>
+                    <p class="section-subtitle" data-i18n="tradeinDesc">Узнайте сколько стоит ваш смартфон и сколько нужно доплатить за новый</p>
+                </div>
+            </div>
+
+            <div class="tradein-grid">
+                <!-- Current Phone -->
+                <div class="tradein-card">
+                    <h3>📱 <span data-i18n="yourPhone">Ваш текущий смартфон</span></h3>
+                    <select class="phone-select" id="tradeinCurrent" onchange="updateTradein()"></select>
+                    <div class="tradein-preview" id="tradeinCurrentPreview">
+                        <div class="emoji">📱</div>
+                        <div class="name" data-i18n="selectPhone">Выберите смартфон</div>
+                    </div>
+                    <label class="selector-label" data-i18n="condition">Состояние:</label>
+                    <div class="condition-btns">
+                        <button class="condition-btn active" data-cond="excellent" onclick="setCondition('excellent')">
+                            <span class="emoji">✨</span>
+                            <span data-i18n="condExcellent">Отличное</span>
+                        </button>
+                        <button class="condition-btn" data-cond="good" onclick="setCondition('good')">
+                            <span class="emoji">👍</span>
+                            <span data-i18n="condGood">Хорошее</span>
+                        </button>
+                        <button class="condition-btn" data-cond="fair" onclick="setCondition('fair')">
+                            <span class="emoji">👌</span>
+                            <span data-i18n="condFair">Среднее</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="tradein-arrow">
+                    <div class="icon">➡️</div>
+                    <span style="color:var(--text-muted);font-size:0.85rem;">Trade-In</span>
+                </div>
+
+                <!-- New Phone -->
+                <div class="tradein-card">
+                    <h3>🆕 <span data-i18n="newPhone">Желаемый смартфон</span></h3>
+                    <select class="phone-select" id="tradeinNew" onchange="updateTradein()"></select>
+                    <div class="tradein-preview" id="tradeinNewPreview">
+                        <div class="emoji">🆕</div>
+                        <div class="name" data-i18n="selectPhone">Выберите смартфон</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="tradein-result" id="tradeinResult" style="display:none;">
+                <h3>💰 <span data-i18n="tradeinCalc">Расчёт Trade-In</span></h3>
+                <div class="tradein-summary">
+                    <div class="tradein-item">
+                        <div class="label" data-i18n="yourPhoneValue">Оценка вашего смартфона</div>
+                        <div class="value green" id="tradeinValue">0 ₽</div>
+                    </div>
+                    <div class="tradein-item">
+                        <div class="label" data-i18n="newPhonePrice">Стоимость нового</div>
+                        <div class="value blue" id="tradeinNewPrice">0 ₽</div>
+                    </div>
+                    <div class="tradein-item">
+                        <div class="label" data-i18n="toPay">Доплата</div>
+                        <div class="value purple" id="tradeinToPay">0 ₽</div>
+                    </div>
+                </div>
+                <div class="savings-badge" id="tradeinSavings">
+                    💵 Экономия: 0 ₽
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PANEL: HEATMAP ==================== -->
+    <div class="panel" id="panel-heatmap">
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <span class="icon">🌡️</span>
+                        <span data-i18n="heatmapTitle">Тепловая карта характеристик</span>
+                    </h2>
+                    <p class="section-subtitle" data-i18n="heatmapDesc">Визуальное сравнение всех смартфонов по ключевым параметрам</p>
+                </div>
+                <div class="filter-group" id="heatmapFilters"></div>
+            </div>
+
+            <div class="heatmap-wrapper">
+                <table class="heatmap-table">
+                    <thead>
+                        <tr>
+                            <th>📱 Смартфон</th>
+                            <th>📷 Камера</th>
+                            <th>⚡ CPU</th>
+                            <th>🧠 ОЗУ</th>
+                            <th>🔋 Батарея</th>
+                            <th>🔌 Зарядка</th>
+                            <th>📺 Экран</th>
+                            <th>💰 Цена</th>
+                        </tr>
+                    </thead>
+                    <tbody id="heatmapBody"></tbody>
+                </table>
+            </div>
+
+            <div class="heatmap-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background:rgba(34,197,94,0.3)"></div>
+                    <span data-i18n="excellent">Отлично</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background:rgba(132,204,22,0.3)"></div>
+                    <span data-i18n="good">Хорошо</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background:rgba(234,179,8,0.3)"></div>
+                    <span data-i18n="average">Средне</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background:rgba(249,115,22,0.3)"></div>
+                    <span data-i18n="belowAvg">Ниже среднего</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background:rgba(239,68,68,0.3)"></div>
+                    <span data-i18n="weak">Слабо</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PANEL: SIZES ==================== -->
+    <div class="panel" id="panel-sizes">
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <span class="icon">📐</span>
+                        <span data-i18n="sizesTitle">Визуальное сравнение размеров</span>
+                    </h2>
+                    <p class="section-subtitle" data-i18n="sizesDesc">Выберите до 4 смартфонов для сравнения их реальных размеров</p>
+                </div>
+            </div>
+
+            <div class="size-container">
+                <div>
+                    <h4 style="margin-bottom:15px;" data-i18n="selectPhones4">Выберите смартфоны (до 4):</h4>
+                    <div class="size-phones-list" id="sizePhonesList"></div>
+                </div>
+                <div class="size-visual-area">
+                    <div class="size-phones-display" id="sizePhonesDisplay">
+                        <p style="color:var(--text-muted);text-align:center;" data-i18n="selectToCompare">Выберите смартфоны для сравнения размеров</p>
+                    </div>
+                    <div class="size-stats-grid" id="sizeStats"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PANEL: GENERATIONS ==================== -->
+    <div class="panel" id="panel-generations">
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <span class="icon">📈</span>
+                        <span data-i18n="genTitle">Сравнение поколений</span>
+                    </h2>
+                    <p class="section-subtitle" data-i18n="genDesc">Эволюция смартфонов: как изменились характеристики от поколения к поколению</p>
+                </div>
+            </div>
+
+            <div class="gen-series-selector" id="genSeriesSelector"></div>
+            <div class="gen-timeline" id="genTimeline">
+                <p style="text-align:center;color:var(--text-muted);padding:50px;" data-i18n="selectSeries">Выберите линейку смартфонов выше</p>
+            </div>
+            <div class="gen-summary" id="genSummary" style="display:none;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="fade-content">
+    <p>PhoneVS Ultimate © 2024 — <span data-i18n="footerText">Полное сравнение смартфонов</span></p>
+</footer>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
+
+<!-- FAVORITES PANEL -->
+<div class="side-panel" id="favoritesPanel">
+    <div class="panel-header">
+        <h3>❤️ <span data-i18n="favorites">Избранное</span></h3>
+        <button class="panel-close" onclick="toggleFavorites()">✕</button>
+    </div>
+    <div class="panel-content" id="favoritesContent"></div>
+</div>
+
+<!-- PHONE MODAL -->
+<div class="modal" id="phoneModal">
+    <div class="modal-header">
+        <h3 data-i18n="phoneDetails">Детали смартфона</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+</div>
+
+<!-- WALLPAPER MODAL -->
+<div class="modal" id="wallpaperModal">
+    <div class="modal-header">
+        <h3 data-i18n="wallpaperSettings">🖼️ Настройки обоев</h3>
+        <button class="modal-close" onclick="closeWallpaperModal()">✕</button>
+    </div>
+    <div class="modal-body">
+        <div style="margin-bottom: 25px;">
+            <label style="display:block; margin-bottom: 10px; font-weight: 500; font-size: 0.95rem; color: var(--text-secondary);" data-i18n="wallpaperUrl">Установить по ссылке (URL):</label>
+            <input type="text" id="wallpaperUrlInput" class="search-input" placeholder="https://example.com/image.jpg" style="width: 100%; margin-bottom: 15px;">
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <button class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;" onclick="applyCustomWallpaper()" data-i18n="apply">Применить</button>
+                <button class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem;" onclick="clearWallpaper()" data-i18n="remove">Сбросить</button>
+            </div>
+        </div>
+        <h4 style="margin-bottom: 15px; font-size: 1rem; color: var(--text-secondary);" data-i18n="presets">Готовые обои:</h4>
+        <div class="presets-grid" id="wallpaperPresets"></div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+<script src="data.js"></script>
+</body>
+</html>
